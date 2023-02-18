@@ -10,9 +10,14 @@ const io = new Server(server, {
     methods: '*',
 });
 
+const User = require('./Models/user');
+const userRoutes = require('./routes/userRoutes');
+
+
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use('/user', userRoutes)
 
 
 

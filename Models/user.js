@@ -1,8 +1,8 @@
-const UserSchema = require('mongoose');
+const {Schema} = require('mongoose');
 const bcrypt = require('bcrypt');
 const { default: mongoose } = require('mongoose');
 
-const UserSchema = Schema({
+const UserSchema = mongoose.Schema({
 
     name: {
         type: String,
@@ -44,10 +44,10 @@ const UserSchema = Schema({
         default:[]
     },
 
-    orders: [{type:Schema.Types.ObjectId, ref: 'Order'}]
+    orders: [{type: mongoose.Schema.Types.ObjectId, ref: 'Order'}]
 }, {minimize: false});
 
-UserSchema.SchemaDefinitionWithBuiltInClass.findByCredentials = async function(email, password){
+UserSchema.statics.findByCredentials = async function(email, password){
     const user = await User.findOne({email});
      if(!user)  throw new Error ('invalid credentials');
     const isSamePassword = bcrypt.compareSync(password, user.password);
@@ -55,14 +55,14 @@ UserSchema.SchemaDefinitionWithBuiltInClass.findByCredentials = async function(e
     throw new Error('invalid credentials')
 }
 
-UserSchema.MixedSchemaTypeOptions.toJSON = function(){
+UserSchema.methods.toJSON = function(){
     const user = this;
     const userObject = user.toObject();
     delete userObject.password;
     return userObject;
 }
 
-UserSchema.PreMiddlewareFunction('save', function(next){
+UserSchema.pre('save', function(next){
     const user = this;
     if(!user.isModified('password')) return next();
 
@@ -76,7 +76,7 @@ UserSchema.PreMiddlewareFunction('save', function(next){
     })
 })
 
-UserSchema.PreMiddlewareFunction('remove', function(next){
+UserSchema.pre('remove', function(next){
     this.model('Order').remove({owner: this._id}, next);
 })
 
