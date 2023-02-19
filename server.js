@@ -17,11 +17,11 @@ const userRoutes = require('./routes/userRoutes');
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use('/user', userRoutes)
+app.use('/users', userRoutes);
 
 
 
 
-server.listen(8080, () => {
+server.listen(8080, ()=> {
     console.log('server running at port', 8080)
-})
+  })
