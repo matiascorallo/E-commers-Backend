@@ -10,7 +10,7 @@ const io = new Server(server, {
     methods: '*',
 });
 
-const User = require('./Models/user');
+const User = require('./Models/User');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const imageRoutes = require('./routes/imageRoutes')
